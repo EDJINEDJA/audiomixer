@@ -15,7 +15,6 @@ push2git:
 	git commit -m "My first commit" 2>> log.txt
 	git push -u origin master 2>> log.txt
 	
-
 install:
 	@echo "installation" 2>> log.txt
 	pip install -r requirements.txt 2>> log.txt
