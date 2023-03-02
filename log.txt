@@ -7,3 +7,5 @@ To https://github.com/EDJINEDJA/audiomixer.git
    e9100da..933710d  master -> master
 To https://github.com/EDJINEDJA/audiomixer.git
    933710d..8ee555f  master -> master
+To https://github.com/EDJINEDJA/audiomixer.git
+   8ee555f..14f41ed  master -> master

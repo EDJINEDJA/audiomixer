@@ -19,7 +19,8 @@ class Utils():
 
         for item in files:
             base = re.findall("\d+.wav", item)
-            parser = Path(base)
-            aud_idx.append(parser.stem())
+            parser = Path(" ".join(base))
+            aud_idx.append(int(parser.stem))
+            
 
         return aud_idx
