@@ -7,6 +7,13 @@ pipe_git:
 	git add .
 	git commit -m "My first commit"
 	git remote add origin https://github.com/EDJINEDJA/audiomixer.git
+
+push2git:
+	@echo "pushing ..."
+	git add .
+	git commit -m "My first commit"
+	git push -u origin master
+	
 install:
 	@echo "installation"
 	pip install -r requirements.txt
