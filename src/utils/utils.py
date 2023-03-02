@@ -1,6 +1,8 @@
 
 import os 
+import re
 import glob
+from pathlib import Path
 
 class Utils():
 
@@ -13,4 +15,11 @@ class Utils():
         for file in glob.glob(self.audios):
             files.append(file)
 
-        return files
+        aud_idx = []
+
+        for item in files:
+            base = re.findall("\d+.wav", item)
+            parser = Path(base)
+            aud_idx.append(parser.stem())
+
+        return aud_idx
