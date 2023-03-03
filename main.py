@@ -11,51 +11,89 @@ import tkinter as tk
 import os
 import pygame
 import shutil
+import tkinter as tk
+import tkinter.filedialog as fd
+import tkinter.messagebox as mb
+from tkinter import filedialog
+import wave
+import pygame
+import os
+import shutil
 
 class AudioPlayer:
     def __init__(self, parent):
         self.parent = parent
-        self.parent.title("Lecteur audio")
-        self.parent.geometry("500x300")
+        self.parent.title("emotion")
+        self.parent.geometry("1280x720")
 
-        # Création du frame principal
+        # Création des frames
         self.main_frame = tk.Frame(self.parent)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
+        self.frame1 = tk.Frame(self.main_frame, background= "blue")
+        self.frame2 = tk.Frame(self.main_frame, background="white" )
+        
+        self.frame1.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.frame2.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # Ajout du bouton de sélection du dossier
-        self.select_button = tk.Button(self.main_frame, text="Sélectionner un dossier", command=self.select_folder)
+        self.frame3 = tk.Frame(self.frame2, background= "white")
+        self.frame4 = tk.Frame(self.frame2, background="white" )
+
+        self.frame4.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.frame3.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        
+
+      
+
+       
+        #  # Création des widgets pour la frame 1 (Ajout du bouton de sélection du dossier)
+        self.select_button = tk.Button(self.frame1, text="Sélectionner un dossier", command=self.select_folder)
         self.select_button.pack(pady=20)
 
-        # Ajout du bouton pour jouer les fichiers audio
-        self.play_button = tk.Button(self.main_frame, text="Lire les fichiers audio", command=self.play_audio_files, state=tk.DISABLED)
-        self.play_button.pack(pady=20)
+        # Variable pour stocker le chemin du dossier sélectionné
+        self.selected_folder = tk.StringVar()
 
+        # Création des widgets pour la frame 2
+        self.L = tk.Label(self.frame3, text="Outil pour jouer les audio et récupérer les noms cibles")
+        self.L.pack(padx=40,pady=100)
+
+        self.play_button = tk.Button(self.frame3, text="Lire", command=self.play_audio)
+        self.play_button.pack(side=tk.LEFT, padx=40)
+
+        self.pause_button = tk.Button(self.frame3, text="Pause", command=self.pause_audio)
+        self.pause_button.pack(side=tk.LEFT, padx=40)
+
+        self.stop_button = tk.Button(self.frame3, text="Stop", command=self.stop_audio)
+        self.stop_button.pack(side=tk.LEFT, padx=40)
+
+        self.volume_label = tk.Label(self.frame3, text="Volume :")
+        self.volume_label.pack(side=tk.LEFT, padx=40)
+
+        self.volume_scale = tk.Scale(self.frame3, from_=0, to=100, orient=tk.HORIZONTAL, command=self.set_volume)
+        self.volume_scale.pack(side=tk.LEFT, padx=10)
         # Ajout du frame pour les remarques
-        self.notes_frame = tk.Frame(self.main_frame)
-        self.notes_frame.pack(pady=20)
+        #self.notes_frame = tk.Frame(self.frame2)
+        #self.notes_frame.pack(side=tk.BOTTOM,pady=100)
 
         # Ajout d'un titre pour le frame de remarques
-        self.notes_title = tk.Label(self.notes_frame, text="Remarques pour chaque fichier audio")
-        self.notes_title.pack()
+        self.notes_title = tk.Label(self.frame4, text="Remarques pour chaque fichier audio")
+        self.notes_title.pack(side=tk.BOTTOM,padx=10,pady=200)
 
         # Création de la variable pour les remarques
         self.notes = []
+        
+        # Initialisation des variables
+        self.audio_file = None
+        self.audio_stream = None
+        self.volume = 50
+        self.paused = False
 
-    def select_folder(self):
-        # Ouvre la boîte de dialogue pour sélectionner un dossier
-        folder_path = tk.filedialog.askdirectory()
-
-        # Si un dossier est sélectionné, active le bouton de lecture
-        if folder_path:
-            self.selected_folder = folder_path
-            self.play_button.config(state=tk.NORMAL)
-
-    def play_audio_files(self):
+    def play_audio(self):
         # Crée le nouveau dossier
         new_folder_path = "./data/processed"
 
         # Parcourt tous les fichiers audio dans le dossier sélectionné
-        for file_name in os.listdir(self.selected_folder):
+    
+        for file_name in os.listdir(os.path.realpath(self.selected_folder)):
             if file_name.endswith(".wav"):
                 # Lit le fichier audio
                 # initialize pygame
@@ -96,3 +134,33 @@ class AudioPlayer:
 
         note_text = tk.Text(note_window, height=5)
         return note_text
+
+
+    def pause_audio(self):
+        if self.audio_file and not self.paused:
+            pygame.mixer.music.pause()
+            self.paused = True
+        elif self.audio_file and self.paused:
+            pygame.mixer.music.unpause()
+            self.paused = False
+
+    def stop_audio(self):
+        if self.audio_file:
+            pygame.mixer.music.stop()
+
+    def set_volume(self, volume):
+        self.volume = int(volume)
+        if self.audio_file:
+            pygame.mixer.music.set_volume(self.volume / 100)
+
+    def select_folder(self):
+        # Ouvre la boîte de dialogue pour sélectionner un dossier
+        folder_path = filedialog.askdirectory()
+
+        # Met à jour la variable selected_folder avec le chemin du dossier sélectionné
+        if folder_path:
+            self.selected_folder.set(folder_path)
+
+        # Affiche le chemin du dossier sélectionné
+        self.label = tk.Label(self.main_frame, textvariable=self.selected_folder)
+        self.label.pack(pady=10)
