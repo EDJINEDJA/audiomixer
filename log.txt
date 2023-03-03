@@ -21,3 +21,5 @@ To https://github.com/EDJINEDJA/audiomixer.git
    eaee504..fdb1c28  master -> master
 To https://github.com/EDJINEDJA/audiomixer.git
    fdb1c28..b369f7a  master -> master
+To https://github.com/EDJINEDJA/audiomixer.git
+   b369f7a..6edfb4d  master -> master

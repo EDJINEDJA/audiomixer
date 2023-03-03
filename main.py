@@ -113,10 +113,7 @@ class AudioPlayer:
                 pygame.quit()
 
                 # Demande à l'utilisateur de donner des remarques pour le fichier audio
-                note = self.get_audio_note()
-
-                # Ajoute les remarques à la liste
-                self.notes.append((file_name, note))
+                note = self.get_audio_note()self.current_audio_index , note))
 
                 # Copie le fichier audio dans le nouveau dossier avec le nom donné par l'utilisateur
                 new_file_path = os.path.join(new_folder_path, f"{note}.wav")
