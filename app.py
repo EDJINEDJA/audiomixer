@@ -4,6 +4,9 @@ import tkinter.filedialog as filedialog
 from tkinter import messagebox
 import pygame
 import shutil
+import sys
+
+
 
 class AudioPlayer:
     def __init__(self, root):
@@ -88,10 +91,22 @@ class AudioPlayer:
         self.pause_button.pack(side=tk.TOP, pady=40)
         self.stop_button.pack(side=tk.TOP)
 
+    @staticmethod
+    def resource_path(relative_path):
+        #https://stackoverflow.com/questions/31836104/pyinstaller-and-onefile-how-to-include-an-image-in-the-exe-file
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS2
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
+
     def submit_form(self):
         self.name = self.name_entry.get()
         self.essai = self.essai_entry.get()
-        self.new_path = os.path.join("./data/processed/", f"{self.name }_{self.essai}")
+        self.new_path = self.resource_path(os.path.join("data\\processed\\", f"{self.name }_{self.essai}"))
         os.makedirs(self.new_path,exist_ok=True)
     
 
@@ -102,7 +117,7 @@ class AudioPlayer:
             messagebox.showwarning("Dossier vide", "Le dossier sélectionné est vide.")
         else:
             # Continuer avec le traitement du dossier
-            self.audio_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(".wav")]
+            self.audio_files = [os.path.join(folder_path, f) for f in os.listdir(self.resource_path(folder_path)) if f.endswith(".wav")]
             self.current_audio_index = 0
             self.current_audio = None
             self.update_audio_label()
